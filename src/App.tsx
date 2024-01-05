@@ -7,6 +7,8 @@ import { useLocalStorage } from './useLocalStorage'
 import { useMemo } from 'react'
 import { v4 as uuidV4 } from 'uuid'
 import { NoteList } from './NoteList'
+import { NoteLayout } from './NoteLayout'
+import { Note } from './Note'
 
 export type Tag = {
     id: string
@@ -80,8 +82,12 @@ function App() {
                         />
                     }
                 />
-                <Route path='/:id'>
-                    <Route index element={<h1>Show</h1>} />
+
+                <Route
+                    path='/:id'
+                    element={<NoteLayout notes={notesWithTags} />}
+                >
+                    <Route index element={<Note />} />
                     <Route path='edit' element={<h1>Edit</h1>} />
                 </Route>
             </Routes>
