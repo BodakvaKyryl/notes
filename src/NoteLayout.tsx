@@ -17,5 +17,5 @@ export function NoteLayout({ notes }: NoteLayoutProps) {
 }
 
 export function useNote() {
-	return useOutletContext<Note>()
+    return useOutletContext<Note>()
 }

@@ -4,15 +4,24 @@ import { Link } from 'react-router-dom'
 import ReactSelect from 'react-select'
 import { Note, Tag } from './App'
 import { NoteCard } from './NoteCard'
+import { EditTagsModal } from './EditTagsModal'
 
-type NoteListProps = {
+export type NoteListProps = {
     availableTags: Tag[]
     notes: Note[]
+    onDeleteTag: (id: string) => void
+    onUpdateTag: (id: string, label: string) => void
 }
 
-export function NoteList({ availableTags, notes }: NoteListProps) {
+export function NoteList({
+    availableTags,
+    notes,
+    onUpdateTag,
+    onDeleteTag,
+}: NoteListProps) {
     const [selectedTags, setSelectedTags] = useState<Tag[]>([])
     const [title, setTitle] = useState('')
+    const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false)
 
     const filteredNotes = useMemo(() => {
         return notes.filter((note) => {
@@ -40,7 +49,12 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
                             <Button variant='primary'>Create</Button>
                         </Link>
 
-                        <Button variant='outline-secondary'>Edit Tags</Button>
+                        <Button
+                            onClick={() => setEditTagsModalIsOpen(true)}
+                            variant='outline-secondary'
+                        >
+                            Edit Tags
+                        </Button>
                     </Stack>
                 </Col>
             </Row>
@@ -91,10 +105,22 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
             <Row xs={1} sm={2} lg={3} xl={4} className='g-3'>
                 {filteredNotes.map((note) => (
                     <Col key={note.id}>
-                        <NoteCard id={note.id} title={note.title} tags={note.tags}/>
+                        <NoteCard
+                            id={note.id}
+                            title={note.title}
+                            tags={note.tags}
+                        />
                     </Col>
                 ))}
             </Row>
+
+            <EditTagsModal
+                show={editTagsModalIsOpen}
+                handleCloseEvent={() => setEditTagsModalIsOpen(false)}
+                availableTags={availableTags}
+                onUpdateTag={onUpdateTag}
+                onDeleteTag={onDeleteTag}
+            />
         </>
     )
 }
